@@ -1,0 +1,474 @@
+BLINK ALL LEDS 
+import sys
+import time
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python-Code- legacy/Adafruit_MCP230XX’)
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16)
+
+mcp.config(0,mcp.OUTPUT) 
+mcp.config(1,mcp.OUTPUT) 
+mcp.config(2,mcp.OUTPUT) 
+mcp.config(3,mcp.OUTPUT) 
+mcp.config(4,mcp.OUTPUT) 
+mcp.config(5,mcp.OUTPUT) 
+mcp.config(6,mcp.OUTPUT) 
+mcp.config(7,mcp.OUTPUT) 
+mcp.config(8,mcp.OUTPUT)
+
+while True:
+	mcp.output(0,1) 
+	time.sleep(1)
+	mcp.output(0,0) 
+	time.sleep(1)
+	mcp.output(4,1) 
+ 	time.sleep(1)
+	mcp.output(4,0) 
+        time.sleep(1)
+	mcp.output(8,1) 
+	time.sleep(1)
+	mcp.output(8,0) 
+	time.sleep(1) 
+----------------------------------------------------------------------------------------------------- 
+TURN ON/OFF PUSH buttons
+import sys
+import time
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python-Code- legacy/Adafruit_MCP230XX’)
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16)
+
+mcp.config(0,mcp.OUTPUT) 
+mcp.config(1,mcp.OUTPUT) 
+mcp.config(2,mcp.OUTPUT) 
+mcp.config(3,mcp.OUTPUT) 
+mcp.config(4,mcp.OUTPUT) 
+mcp.config(5,mcp.OUTPUT) 
+mcp.config(6,mcp.OUTPUT) 
+mcp.config(7,mcp.OUTPUT) 
+mcp.config(8,mcp.OUTPUT) 
+mcp.config(9,mcp.INPUT) 
+mcp.pullup(9,0)
+mcp.config(10,mcp.INPUT) 
+mcp.pullup(10,0)
+i=0
+while i!=4:
+	print(“Pin-9=”,mcp.input(9)) 
+	print(“Pin-10=”,mcp.input(10)) 	
+        time.sleep(2)
+	i+=1
+------------------------------------------------------------------------------------------------------ 
+Program to glow LED1/LED2 when push button 1 or 2 is pressed else glow LED3
+import sys
+import time
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python-Code- legacy/Adafruit_MCP230XX’)
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16)
+
+mcp.config(0,mcp.OUTPUT) 
+mcp.config(1,mcp.OUTPUT) 
+mcp.config(2,mcp.OUTPUT)
+mcp.config(3,mcp.OUTPUT) 
+mcp.config(4,mcp.OUTPUT) 
+mcp.config(5,mcp.OUTPUT) 
+mcp.config(6,mcp.OUTPUT) 
+mcp.config(7,mcp.OUTPUT) 
+mcp.config(8,mcp.OUTPUT) 
+mcp.config(9,mcp.INPUT) 
+mcp.pullup(9,0)
+mcp.config(10,mcp.INPUT) 
+mcp.pullup(10,0)
+
+while True:
+	if mcp.input(9):
+		mcp.output(0,1) 
+	if mcp.input(10):
+		mcp.output(4,1)
+	else:
+		mcp.output(8,1) 
+----------------------------------------------------------------------------------------- 
+Program to turn on buzzer.
+CODE:
+import sys
+import time
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python-Code- legacy/Adafruit_MCP230XX’)
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16)
+
+mcp.config(0,mcp.OUTPUT) 
+mcp.config(1,mcp.OUTPUT) 
+mcp.config(2,mcp.OUTPUT) 
+mcp.config(3,mcp.OUTPUT) 
+mcp.config(4,mcp.OUTPUT) 
+mcp.config(5,mcp.OUTPUT) 
+mcp.config(6,mcp.OUTPUT) 
+mcp.config(7,mcp.OUTPUT) 
+mcp.config(8,mcp.OUTPUT) 
+mcp.config(9,mcp.INPUT) 
+mcp.pullup(9,0)
+mcp.config(10,mcp.INPUT) 
+mcp.pullup(10,0)
+mcp.config(11,mcp.OUTPUT)
+while True:
+	if mcp.input(9):
+		mcp.output(11,1) 
+	if mcp.input(10):
+		mcp.output(11,0)
+---------------------------------------------------------------------------------------------- 
+Write a program to sense the weather using BME280 sensor.
+
+CODE:
+
+import sys
+sys.path.append('/home/pi/ETS IOT KIT demo/DemoCode/BME288)
+import EME280lib as bme
+import time
+while True:
+	temperature, pressure, humidity=bme.readBME280A11()
+	print ("Temperature : , temperature, "c")
+	print ("Pressure : ", pressure, "hPa")
+	print ("Humidity: humidity, "%")	
+	time.sleep (2) 
+---------------------------------------------------------------------------------------------- 
+Write a program to calculate the distance using ULTRASONIC SENSOR.
+
+CODE:
+  import sys
+  import time
+  Import RPi.GPIO as GPIO
+  GPIO.setwarnings (False)
+  GPIO.setmode (GPIO.BOARD)|
+  GPIO_TRIGGER=16
+  GPIO_ECHO=18
+  GPIO.setup(GPIO_TRIGGER, GPIO.OUT) 
+  GPIO.setup(GPIO_ECHO, GPIO.IN)   
+  GPIO.output(GPIO_TRIGGER, False))
+  time.sleep(1)
+  while True:
+              GPIO.output(GPIO_TRIGGER, True) 
+              time.sleep(1)
+              GPIO.output(GPIO_TRIGGER, False)
+              while GPIO.input(GPIO_ECHO)==0:
+                      start=time.time()
+              while GPIO. input(GPIO_ECHO)==1:
+                       stop=time.time()
+              
+              elapsed=stop-start
+              distance=elapsed*34300
+              distance=distance/2
+              print("Distance :",distance)
+              time.sleep(1)
+
+-------------------------------------------------------------------------------------- 
+PIR Sensor 
+
+import sys 
+import time 
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python-Code- legacy/Adafruit_MCP230XX’)
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16)
+mcp.config(0,mcp.INPUT) 
+mcp.pullup(0,1) 
+while True: 
+	i=mcp.input(0) 
+	time.sleep(1) 
+	if i==1: 
+	     print("DEtect") 
+	     time.sleep(1) 
+	if i==0: 	
+	     print("Not Detect") 
+	     time.sleep(1) 
+---------------------------------------------------------------------------------------- 
+Program to sense the moisture level in ground soil using soil moisture sensor.
+
+import sys
+import time
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
+
+SPI_PORT =0
+SPI_DEVICE =0
+
+mcp=Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT,SPI_DEVICE))
+while True:
+    t=mcp.read_adc(0)
+
+    p=(100-(t/1023.0)*100)
+    print('moisture content is',p)
+    time.sleep(3)
+------------------------------------------------------------------------------------------- 
+Upload the weather information on to the open-source cloud “ThingSpeak”
+
+import sys
+import time
+sys.path.append(“/home/pi/ETS_IoT KIT demo/DemoCode/BME280”)
+import BME280lib as bme
+import urllib.request as ur
+
+while(True):
+    t,p,h=bme.readBME280All()
+    st=’https://api.thingspeak.com/update?api_key=8NRQFDOVGWPUL669&field1=’str(t)+’&field2=’
++str(p)+’&field3=’str(h)
+    f=ur.urlopen(st)
+    time.sleep(2)
+
+---------------------------------------------------------------------------------------- 
+OLED – Organic Light Emitting Diode
+
+import time
+import Adafruit_SSD1306
+from PIL import Image
+from PIL import ImageDraw
+from PIL import Image Font
+
+RST=24
+disp=Adafruit_SSD1306.SSD1306_128_64(rst=RST,i2c_address=0x3c)
+disp.begin()
+disp.clear()
+disp.display()
+width=disp.width
+height=disp.height
+image=Image.new('1' ,(width,height))
+draw=ImageDraw.Draw(image)
+draw.rectangle((0,0,width, height),outline=0,fill=0)
+padding=2
+top=padding
+x=padding
+font=ImageFont.load_default()
+draw.text((x,top),’HELLO...’,font=font,fill=255)
+draw.text((x,top+20),’Vasavi!’,font=font,fill=255)
+disp.image(image)
+disp.display()
+time.sleep(5) 
+
+EXECUTE this infront on Bluetooth in command prompt
+
+1.sudo bluetoothctl
+agent on
+default-agent
+scan on
+scan off
+devices
+pair CB:AA: 0B: BF :08: CD connect CB: AA:0B:BF:08: CD
+trust CB:AA:0B: BF: 08: CD 
+
+2.On your Raspberry Pi:
+1. Type bluetoothctl and press Enter to open
+Bluetooth control
+2. At the [bluetooth]#
+prompt enter the
+following commands:
+	discoverable on 
+	pairable on 
+	agent on
+	default-agent
+	scan on
+3. Wait for a message to appear showing the Android phone has been found:
+
+[NEW] Device 12:23:34:45:56:67 devicename
+4. Type pair with the mac address of your Android phone:
+
+pair 12:23:34:45:56:67
+-------------------------------------------------------------------------------------- Bluetooth Program using normal server and client.
+
+Server Code
+
+import bluetooth 
+import time
+server_sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+port=1
+server_sock.bind((“ “,port)) 
+server_sock.listen(1)
+client_sock,address=server_sock.accept() 
+print(“accepted connection from”,address) 
+while True:
+	data=client_sock.recv(1024) 
+	print(“received from client”+data) 
+server_sock.close()
+
+Client code
+import bluetooth import time
+bd_addr=”B8:27:EB:5A:15:EF”
+port=1
+sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+sock.connect((bd_addr,port))
+while True:
+	text=raw_input(“enter your message”) 
+	sock.send(text)
+	time.sleep(1)  
+sock.close() 
+--------------------------------------------------------------------------------------- 
+Program to turn on LED and Buzzer remotely Server Code
+
+import bluetooth 
+import time 
+import sys
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python.Codelegacy/ Adafruit_MCP230xx’)
+from Adafruit_MCP230xx import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1,address=0x20,num_gpios=16) 
+mcp.config(0,mcp.OUTPUT)
+mcp.config(11,mcp.OUTPUT) 
+server_sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+port=1
+server_sock.bind((==,port)) 
+server_sock.listen(1) 
+client_sock,address=server_sock.accept() 
+print(“accepted connection from”,address) 
+while True:
+	data=client_sock.recv(1024) 
+	print(“received from client”+data) 
+	if(data==”on”):
+		mcp.output(0,1) 
+		mcp.output(11,1) 
+		time.sleep(1) 
+	else:
+		mcp.output(0,0) 
+		mcp.output(11,0) 
+		time.sleep(1) 
+server_sock.close()
+
+Client code:
+import bluetooth import time
+bd_addr=”B8:27:EB:5A:15:EF”
+port=1
+sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+sock.connect((bd_addr,port))
+while True:
+	text=raw_input(“enter your message”) 
+	sock.send(text)
+	time.sleep(1) 
+sock.close()
+
+------------------------------------------------------------------------------------------ Program to turn on LED2 in Blue color and RElay-1(ON)
+
+Server Code
+
+import bluetooth 
+import time
+import RPi.GPIO as GPIO 
+import sys
+sys.path.append(‘/home/pi/Adafruit-Raspberry-Pi-Python.Codelegacy/ Adafruit_MCP230xx’)
+from Adafruit_MCP230xx import Adafruit_MCP230XX
+mcp=Adafruit_MCP230XX(busnum=1,address=0x20,num_gpios=16) 
+mcp.config(3,mcp.OUTPUT)
+GPIO.setwarnings(False) 
+GPIO.setmode(GPIO.BOARD) 
+GPIO.setup(36,GPIO.OUT)
+server_sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+port=1
+server_sock.bind((“”,port)) 
+server_sock.listen(1)
+client_sock,address=server_sock.accept() 
+print(“accepted connection from”,address) 
+while True:
+data=client_sock.recv(1024) 
+print(“received from client”+data) 
+if(data==”on”):
+mcp.output(3,1) 
+GPIO.output(36,1) 
+time.sleep(1)
+else:
+mcp.output(3,0) 
+GPIO.output(36,0) 
+time.sleep(1)
+server_sock.close()
+
+Client Code 
+
+import bluetooth 
+import time
+bd_addr=”B8:27:EB:5A:15:EF”
+port=1
+sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM) 
+sock.connect((bd_addr,port))
+while True:
+text=raw_input(“enter your message”) 
+sock.send(text)
+time.sleep(1) 
+sock.close()
+--------------------------------------------------------------------------------------- 
+ZIGBEE end device.
+
+Sourcecode:
+import time
+import serial
+ser=serial.Serial(port=’/dev/ttyUSB0’,baudrate=9600, parity=serial.PARITY_NONE,
+stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS,timeout=1)
+while True:
+x=raw_input(‘enter text to send to coordinator’)
+ser.write(x)
+time.sleep(1)
+
+ZIGBEE router device.
+Sourcecode:
+
+import time
+import serial
+ser=serial.Serial(port=’/dev/ttyUSB0’,baudrate=9600, parity=serial.PARITY_NONE,
+stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
+while True:
+x=’blank’
+x=ser.readline()
+print ‘message from EN: %s’ %X
+ser.write(‘message from R: %s’ %X)
+time.sleep(1)
+
+ZIGBEE Coordinator device.
+Sourcecode:
+import time
+import serial
+ser=serial.Serial(port=’/dev/ttyUSB0’,baudrate=9600, parity=serial.PARITY_NONE,
+stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
+while 1:
+msg=s.readline()
+print(msg) 
+
+----------------------------------------------------------------------------------------- 
+Installation on command prompt  
+
+sudo apt install -y mosquitto 
+sudo apt install -y mosquitto-clients 
+
+To check status 
+sudo systemctl status mosquitto.service
+
+MQTT Subscriber 
+
+import paho.mqtt.client as mqtt
+def on_connect(client, userdata, flags, rc):
+	print(“Connected with MQTT Server “+str(rc))
+	client.subscribe(“iot/home”)
+def on_message(client, userdata, msg):
+	print(msg.topic+“ ”+str(msg.payload))
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.connect(“test.mosquitto.org”, 1883,60)
+client.loop_forever()
+
+MQTT Publisher
+
+import paho.mqtt.client as mqtt
+publish.single(“iot/home”, “temperature”, hostname=”test.mosquitto.org”)
+print(“Done") 
+
+-------------------------------------------------------------------------------------------
+
+Write a Program to upload the weather information on to the open-source cloud “ThingSpeak”.
+
+Sourcecode:
+import sys
+import time
+sys.path.append(‘/home/pi/ETS_IoT KIT demo/DemoCode/BME280’)
+import BME280lib as bme
+import urllib.request as ur
+while True:
+t,p,h=bme.readBME280All( )
+print(‘Temperature :’,t)
+print(‘Pressure:’,p)
+print(‘Humidity :’,h)
+st=’https:// api.thingspeak.com/update?api_key=FBMA7CJW92DJJ1S&field1=’+ str(t)+
+’&field2=’+str(p)+’&field3=’+str(h)
+f=ur.urlopen(st)
+time.sleep(2) 
+
+-------------------------------------------------------------------------------------------
+
