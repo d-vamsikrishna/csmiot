@@ -1,0 +1,613 @@
+//RGB LED
+
+import sys 
+import time 
+sys.path.append("/home/pi/1602-21-733/Adafruit_MCP230xx")
+from Adafruit_MCP230xx import Adafruit_MCP230XX 
+mcp=Adafruit_MCP230XX(busnum=1, address=0x20,num_gpios=16) 
+for i in range(9):
+  mcp.config(i,mcp.OUTPUT) 
+mcp.config(9,mcp.INPUT)
+mcp.config(10,mcp.INPUT) 
+while True: 
+	mcp.output(2,0)
+	if mcp.input(9) == 512 :
+		mcp.output(2,1)
+	if mcp.input(10) == 1024: 
+		mcp.output(2,0)
+		mcp.output(3,1)
+		time.sleep(5)
+-------------------------------------------------------------------------------------------------------------------------------------------
+//LED DISPLAY
+
+import time
+import Adafruit_SSD1306
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+RST=24
+disp=Adafruit_SSD1306.SSD1306_128_64(rst=RST, i2c_address=0x3C)
+disp.begin()
+disp.clear()
+disp.display()
+width=disp.width
+height=disp.height
+image=Image.new('1', (width, height))
+draw=ImageDraw.Draw(image)
+draw.rectangle((0,0,width, height), outline=0, fill=0)
+padding=2
+top=padding
+x=padding
+y="abc"
+font=ImageFont.load_default()
+draw.text((x, top), 'Hello...', font=font, fill=255)
+draw.text((x, top+20), y, font=font, fill=255)
+disp.image(image)
+disp.display()
+time.sleep(5)
+-------------------------------------------------------------------------------------------------------------------------------------------
+//PUSH DOWN BUTTONS
+
+import sys
+sys.path.append('/home/pi/Adafruit-Raspberry-Pi-Python-Code-legacy/Adafruit_MCP230xx') 
+from Adafruit_MCP230XX import Adafruit_MCP230XX
+import time
+mcp Adafruit_MCP230XX(busnum = 1, address = 0x20, num gpios = 16)
+mcp.config(4, mcp.OUTPUT) 
+mcp.config(9, mcp.INPUT)
+mcp.config(11, mcp.OUTPUT)
+while True:
+	mcp.output(4,0)
+	if mcp.input(9)==512:
+		mcp.output(11,1)
+		mcp.output(4,1)
+	else:
+		mcp.output(11,0)
+		mcp.output(4,0)
+-------------------------------------------------------------------------------------------------------------------------------------------
+//BME280
+
+import sys 
+import time 
+sys.path.append('/home/pi/ETS_IOT KIT demo/DemoCode/BME280')
+import BME280lib as BME 
+while True: 
+	temperature, pressure, humidity=BME.readBME280A11() 
+	print ("Temperature:", temperature, "C") 
+	print ("Pressure :", pressure ,"hPa") 
+	print ("Humidity :", humidity, "%")
+	time.sleep(3)
+-------------------------------------------------------------------------------------------------------------------------------------------
+//PIR
+
+import sys
+sys.path.append('/home/pi/Adafruit-Raspberry-Pi-Python-Code-	legacy/Adafruit_MCP230xx') 
+from Adafruit_MCP230xx import Adafruit_MCP230XX 
+import time 
+mcp=Adafruit_MCP230XX(busnum=1,address=0x21,num_gpios=16) 		
+mcp.config(0,mcp.INPUT) 
+mcp.pullup(0,1) 
+while True: 
+	i=mcp.input(0) 
+	time.sleep(1) 
+	if i==1: 
+		print "person detect"
+		time.sleep(1) 
+	if i==0: 
+		print "person not detect"
+		time.sleep(1)
+    
+#Pins Connection
+1pin-GND
+2pin-GPA0//left side of board
+3pin-VCC 5v
+-------------------------------------------------------------------------------------------------------------------------------------------
+//ULTRASONIC SENSOR
+
+import time, sys 
+import RPi.GPIO as GPIO
+GPIO.setwarnings(False ) 
+GPIO.setmode(GPIO.BOARD) 
+GPIO_TRIGGER=16 
+GPIO_ECHO = 18 
+GPIO.setup(GPIO_TRIGGER, GPIO.OUT) 
+GPIO.setup(GPIO_ECHO, GPIO.IN) 
+GPIO.output(GPIO_TRIGGER, False) 
+i=1  
+while(True): 
+	GPIO.output(GPIO_TRIGGER, True) 
+	time.sleep(0.0001) 
+	GPIO.output(GPIO_TRIGGER, False) 
+	while(GPIO.input(GPIO_ECHO)==0): 
+		start = time.time() 
+	while(GPIO.input(GPIO_ECHO)==1): 
+		stop = time.time() 
+	elapsed = stop-start 
+	d=elapsed*34300 
+	d=d/2 
+	print(“Distance of object -->“+str(d)+”cm”) 
+	time.sleep(5) 
+  i+=1
+  
+#Pins Connection
+Vcc=5V Output
+Trig=RPI16 //This is present on kit left side on board
+ECHO=RPI18
+Gnd=GND
+-------------------------------------------------------------------------------------------------------------------------------------------
+//SOIL MOISTURE
+
+import time
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
+SPI_PORT = 0
+SPI_DEVICE = 0
+mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+while True:
+    t = mcp.read_adc(0)
+    p = (100 - (t / 1023.0) * 100)
+    print('Moisture content is:', p)
+time.sleep(3)
+
+#Pins connections
+VCC-VCC 5v
+GND-GND
+A0-A0
+-------------------------------------------------------------------------------------------------------------------------------------------
+//SERVO MOTOR
+
+import sys
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(22, GPIO.OUT)
+pwm=GPIO.PWM(22,100)
+pwm.start(5)
+angle1=1
+duty1=float(angle1)/10+2.5
+angle2=160
+duty2= float(angle2)/10+2.5
+ck=0
+while ck<=5:
+	pwm.ChangeDutyCycle(duty1)
+	time.sleep(0.8)
+	pwm.ChangeDutyCycle(duty2)
+	time.sleep(0.8)
+	ck=ck+1
+time.sleep(1)
+GPIO.cleanup()
+
+#Pins connection
+ASH color- GND
+RED-VCC
+Yellow-RPI 22
+-------------------------------------------------------------------------------------------------------------------------------------------
+//BLUETOOTH
+#Commands run in cmd first
+sudo apt-get install bluetooth
+sudo apt-get install bluez
+sudo apt-get install python-bluez
+sudo bluetoothctl
+power on 
+agent on
+default agent
+discoverable on
+scan on
+
+
+server.py:
+  
+import time
+import sys
+server_sock=bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+port = 1
+server_sock.bind(("", port))
+server_sock.listen(1)
+client_sock, address =server_sock.accept()
+print ("Accepted connection from", address)
+while True:
+	data = client sock.recv(1024)
+	print ("received [%s]" ,% data)
+client_sock.close()
+server_sock.close()
+
+client.py:
+
+import bluetooth
+import sys
+bd_addr="08:27:EB:33:60:A2" #server MAC address
+port=1 
+sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+sock.connect((bd_addr, port))
+while True:
+	text = input("Enter Message") 
+  sock.send(text)
+sock.close()
+
+Type this in command pompt
+sudo apt-get install bluetooth
+sudo apt-get install bluez
+sudo apt-get install python-bluez
+sudo bluetoothctl
+power on
+agent on
+default-agent
+discoverable on
+scan on
+
+#first run server.py  
+#then client.py
+-------------------------------------------------------------------------------------------------------------------------------------------
+//THINGSPEAK
+
+import sys
+sys.path.append('/home/pi/Desktop/New2')
+import BME280lib as bme
+import urllib.request as ur
+import time
+while True:
+  t, p, h = bme.readBME280All()
+	print("Temperature:", t, "C")
+	print("Pressure:", p, "hPa")
+	print("Humidity:", h, "%")
+	st=f'https://api.thingspeak.com/update?api_key=JXHSGARY1MYEDBEN&field1={t}&field2={p}&field3={h}'
+    # Sending the data to ThingSpeak
+  f = ur.urlopen(st)
+time.sleep(2)
+
+#To see the output
+Go to thingspeak go to apikeys then copy the link of read feed channel and open it
+-------------------------------------------------------------------------------------------------------------------------------------------
+//ZIGBEE 
+
+import time
+import serial
+ser = serial.Serial(port='/dev/ttyUSB0', baudrate=9600,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS, timeout=1)
+while True:
+    x = 'blank'
+    x = ser.readline()
+    print('message from EN:', x)
+    ser.write(('message from R: %s' ,% x).encode())
+    time.sleep(1)
+    
+//ZIGBEE COORDINATOR
+
+import time
+import serial
+ser = serial.Serial(port='/dev/ttyUSB0', baudrate=9600,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS, timeout=1)
+while True:
+  msg=ser.readline()
+  print(msg)
+
+//ZIGBEE END DEVICE
+
+import time
+import serial
+ser = serial.Serial(port='/dev/ttyUSB0', baudrate=9600,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS, timeout=1)
+while True:  
+  x=raw_input('enter msg to send to coordinator')
+  ser.write(x)
+  time.sleep(1)
+-------------------------------------------------------------------------------------------------------------------------------------------
+//MQTT-PUBLISH
+
+mqtt.py:
+
+import paho.mqtt.publish as publish
+
+import BME280lib as bme
+t, p, h = bme.readBME280All()
+publish.single("iot/home", "temperature %s %s %s" %(t,p,h),  hostname="test.mosquitto.org")
+print("Done")
+
+//MQTT-SUBSCRIBE
+
+subs.py:
+
+import paho.mqtt.client as mqtt
+def on_connect(client, userdata, flags, rc):    
+	print("Connected")                            
+	client.subscribe("iot/home") 
+def on_message(client, userdata, msg):    
+  print(msg.topic+""+str(msg.payload))    
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.connect("test.mosquitto.org", 1883, 60)
+client.loop_forever()
+
+#first run subs.py
+#then run mqtt.py
+-------------------------------------------------------------------------------------------------------------------------------------------
+//IIOT
+
+Client-Side sensor code:
+
+import time
+import random
+import requests
+# Simulate sensor data collection
+def collect_sensor_data():
+    # Simulate vibration sensor data
+    vibration_data = random.uniform(0, 1)
+    return vibration_data
+# Transmit data to server
+def transmit_data_to_server(data):
+    server_url = 'http://localhost:5000/data'  # Assuming server is running locally
+    payload = {'vibration_data': data}
+    try:
+        response = requests.post(server_url, json=payload)
+        if response.status_code == 200:
+            print("Data transmitted successfully!")
+        else:
+            print("Error transmitting data:", response.status_code)
+    except Exception as e:
+        print("Exception occurred while transmitting data:", str(e))
+# Main loop
+while True:
+    # Collect sensor data
+    sensor_data = collect_sensor_data()
+    # Transmit data to server
+    transmit_data_to_server(sensor_data)
+    # Sleep for a specified interval before collecting more data
+    time.sleep(5)  # Sleep for 5 seconds (adjust as needed)
+Server-side Flask code:
+
+from flask import Flask, request
+app = Flask(__name__)
+@app.route('/data', methods=['POST'])
+def receive_data():
+    data = request.get_json()
+    vibration_data = data.get('vibration_data')
+    print("Received sensor data:", vibration_data)
+    return 'Data received successfully!', 200
+if __name__ == '__main__':
+    app.run(debug=True)
+-------------------------------------------------------------------------------------------------------------------------------------------
+import RPi.GPIO as GPIO
+import time
+
+# Set GPIO mode
+GPIO.setmode(GPIO.BCM)
+
+# Define GPIO pins for LED, servo motor, and buzzer
+LED_PIN = 18
+SERVO_PIN = 17
+BUZZER_PIN = 22
+
+GPIO.setup(LED_PIN, GPIO.OUT)
+GPIO.setup(SERVO_PIN, GPIO.OUT)
+GPIO.setup(BUZZER_PIN, GPIO.OUT)
+
+def read_moisture():
+    import random
+    return random.randint(0, 100)
+
+def turn_on_led():
+    GPIO.output(LED_PIN, GPIO.HIGH)
+
+def turn_off_led():
+    GPIO.output(LED_PIN, GPIO.LOW)
+
+def turn_servo():
+    pwm = GPIO.PWM(SERVO_PIN, 50)
+    pwm.start(0)
+    duty = 90 / 18 + 2
+    GPIO.output(SERVO_PIN, True)
+    pwm.ChangeDutyCycle(duty)
+    time.sleep(1)
+    GPIO.output(SERVO_PIN, False)
+    pwm.ChangeDutyCycle(0)
+    pwm.stop()
+
+def beep_buzzer():
+    GPIO.output(BUZZER_PIN, GPIO.HIGH)
+    time.sleep(3)
+    GPIO.output(BUZZER_PIN, GPIO.LOW)
+
+try:
+    while True:
+        moisture_level = read_moisture()
+        print("Moisture level:", moisture_level)
+        
+        if moisture_level < 20:
+            turn_servo()
+            beep_buzzer()
+        elif moisture_level < 50:
+            turn_on_led()
+        else:
+            turn_off_led()
+        
+        time.sleep(5)  # Adjust the interval as needed
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
+-------------------------------------------------------------------------------------------------------------------------------------------
+nodered process (may not work)
+
+To create a Node-RED flow that reads data from a BME280 sensor and publishes it to an MQTT topic named env using Python on a Raspberry Pi, you will need to follow these steps:
+
+Install Necessary Packages on Raspberry Pi:
+
+Ensure you have Node-RED installed.
+Install the node-red-dashboard for visualization (optional).
+Install the paho-mqtt library and the Adafruit_BME280 library in Python.
+Connect the BME280 Sensor:
+
+Connect the BME280 sensor to the Raspberry Pi using I2C.
+Create Python Script for BME280 Sensor:
+
+Write a Python script to read data from the BME280 sensor.
+Create Node-RED Flow:
+
+Create a flow in Node-RED to call the Python script and publish the data to the MQTT topic env.
+Here is a step-by-step guide:
+
+Step 1: Install Necessary Packages
+Open a terminal on your Raspberry Pi and run:
+
+bash
+Copy code
+sudo apt-get update
+sudo apt-get install python3-pip
+sudo pip3 install paho-mqtt adafruit-circuitpython-bme280
+Step 2: Connect the BME280 Sensor
+Connect the BME280 sensor to your Raspberry Pi's I2C pins. Typically, the connections are as follows:
+
+VCC to 3.3V
+GND to GND
+SCL to SCL (Pin 5, GPIO3)
+SDA to SDA (Pin 3, GPIO2)
+Step 3: Create Python Script
+Create a Python script to read data from the BME280 sensor and publish it to the MQTT topic env.
+
+Save the following script as bme280_mqtt.py:
+
+python
+Copy code
+import time
+import board
+import adafruit_bme280
+import paho.mqtt.client as mqtt
+
+# Create sensor object, using the I2C bus
+i2c = board.I2C()
+bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+
+# MQTT setup
+mqtt_broker = "test.mosquitto.org"
+mqtt_port = 1883
+mqtt_topic = "env"
+client = mqtt.Client()
+
+client.connect(mqtt_broker, mqtt_port, 60)
+
+# Read data and publish to MQTT
+while True:
+    temperature = bme280.temperature
+    humidity = bme280.humidity
+    pressure = bme280.pressure
+
+    payload = {
+        "temperature": temperature,
+        "humidity": humidity,
+        "pressure": pressure
+    }
+
+    client.publish(mqtt_topic, str(payload))
+    time.sleep(60)  # Read and publish every 60 seconds
+Step 4: Create Node-RED Flow
+Open Node-RED on your Raspberry Pi by navigating to http://<your-raspberry-pi-ip>:1880 in your web browser.
+
+Node-RED Flow
+Install node-red-contrib-python-function:
+
+In Node-RED, go to the menu (top right) > Manage Palette > Install tab.
+Search for node-red-contrib-python-function and install it.
+Create the Flow:
+
+Drag and drop an inject node to trigger the process.
+Drag and drop a python function node to call the Python script.
+Drag and drop an mqtt out node to publish the data.
+Configure Nodes
+Inject Node:
+
+Double-click the inject node.
+Set it to repeat every minute.
+Python Function Node:
+
+Double-click the Python function node.
+Set the path to your Python script /path/to/bme280_mqtt.py.
+MQTT Out Node:
+
+Double-click the MQTT out node.
+Set the server to test.mosquitto.org and port to 1883.
+Set the topic to env.
+Connect the Nodes:
+
+Connect the inject node to the python function node.
+Connect the python function node to the mqtt out node.
+Deploy the Flow:
+
+Click the Deploy button in the top right corner.
+Your final flow should look something like this:
+
+plaintext
+Copy code
+[Inject] --> [Python Function] --> [MQTT Out]
+Full Node-RED Flow JSON
+Here is the JSON representation of the Node-RED flow. You can import this directly into Node-RED:
+
+json
+Copy code
+[
+    {
+        "id": "inject1",
+        "type": "inject",
+        "z": "flow1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "pythonFunction"
+            ]
+        ]
+    },
+    {
+        "id": "pythonFunction",
+        "type": "python-function",
+        "z": "flow1",
+        "name": "Run BME280 Script",
+        "func": "/path/to/bme280_mqtt.py",
+        "outputs": 1,
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "mqttOut"
+            ]
+        ]
+    },
+    {
+        "id": "mqttOut",
+        "type": "mqtt out",
+        "z": "flow1",
+        "name": "",
+        "topic": "env",
+        "qos": "",
+        "retain": "",
+        "broker": "test.mosquitto.org:1883",
+        "x": 530,
+        "y": 100,
+        "wires": []
+    }
+]
+Import the Flow
+Copy the JSON representation.
+In Node-RED, go to the menu > Import > Clipboard.
+Paste the JSON and click Import.
+Deploy the Flow
+Click the Deploy button in Node-RED to start the flow.
+Your setup should now read data from the BME280 sensor and publish it to the MQTT topic env every minute.
+
+
+
+ets iot kit demo 
+https://drive.google.com/file/d/1UHZn9E0qOG52jImhjB2MUUuwh9B3P4kz/view?usp=sharing
