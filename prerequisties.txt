@@ -1,0 +1,50 @@
+Bluetooth prerequisties  
+
+Step-1 
+
+sudo apt-get install bluetooth 
+sudo apt-get install bluez 
+sudo apt-get install python-bluez 
+
+
+Step-2 
+
+sudo bluetoothctl 
+power on 
+agent on 
+default-agent 
+discoverable on
+scan on 
+pair [external dev name]
+------------------------------------------------------------------------------ 
+mqtt prerequistes 
+
+Step-1 
+ 
+sudo apt update 
+sudo apt install python3-pip
+pip3 install paho-mqtt 
+
+Step-2 
+
+sudo apt install mosquitto mosquitto-clients
+sudo systemctl status mosquitto 
+----------------------------------------------------------------------------------- 
+
+Zigbee-XCTU CONFIGURATIONS 
+
+1.End device 
+  -JV -ENABLED[1] 
+  -DH-0 
+  -DL-0 
+  -SP-IF4 
+  -SM-Cyclic sleep[4] 
+  -SO-2 
+2.Router 
+  -JV-ENABLED[1] 
+  -DH-0 
+  -DL-0 
+  -SP-IF4 
+3.COORDinator 
+  -CE-Enabled
+  -SP-IF4
